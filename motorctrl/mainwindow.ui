@@ -40,11 +40,11 @@
      <string>回原点</string>
     </property>
    </widget>
-   <widget class="QLabel" name="pos_label">
+   <widget class="QLabel" name="x_pos_label">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>90</y>
+      <x>180</x>
+      <y>180</y>
       <width>121</width>
       <height>16</height>
      </rect>
@@ -64,6 +64,71 @@
     </property>
     <property name="text">
      <string>脉冲清零</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="XCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>180</y>
+      <width>80</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>X轴</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="YCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>210</y>
+      <width>80</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Y轴</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ZCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>240</y>
+      <width>80</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Z轴</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="y_pos_label">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>210</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>位置:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="z_pos_label">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>240</y>
+      <width>141</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>位置:</string>
     </property>
    </widget>
   </widget>

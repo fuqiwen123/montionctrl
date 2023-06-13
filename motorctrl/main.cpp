@@ -9,8 +9,6 @@ int main(int argc, char *argv[])
     MainWindow w(d1000_board_init());
     w.show();
 
-//    return a.exec();
-
     int nRet = a.exec();
     d1000_board_close();
     return nRet;

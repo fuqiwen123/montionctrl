@@ -1,6 +1,7 @@
 #include "axis.h"
 #include "Dmc1000.h"
-// #include "QDebug.h"
+#include <math.h>
+#include "QDebug.h"
 
 Axis::Axis()
 {
@@ -10,7 +11,11 @@ Axis::Axis()
 int Axis::SetPlsMode(int nId, int nMode)
 {
     m_nId = nId;
-    return d1000_set_pls_outmode(m_nId, nMode);
+
+    if (m_nId == 0 || m_nId == 2)
+        return d1000_set_pls_outmode(m_nId, 1);
+
+    return d1000_set_pls_outmode(m_nId, 0);
 }
 
 bool Axis::CreateAxis(Axis*& pAxis, int nCount, int nMode)
@@ -34,7 +39,7 @@ bool Axis::CreateAxis(Axis*& pAxis, int nCount, int nMode)
         return false;
 
 
-    for(short i = 0; i < nCount; i++)
+    for(short i = 0; i < (nCount << 2); i++)
     {
         nRes = pAxis[i].SetPlsMode(i, nMode);
         if (nRes)
@@ -101,6 +106,7 @@ BYTE Axis::GetStatus()
 double Axis::GetPostion()
 {
     long nPos = d1000_get_command_pos(m_nId);
+
     return CONVERT_TO_LENGTH(nPos);
 }
 
@@ -111,9 +117,12 @@ void Axis::KeyboardLeft()
 
     m_bHome = false;
     BYTE nRes = (BYTE)d1000_get_axis_status(m_nId);
+    long nPos = d1000_get_command_pos(m_nId);
+
     m_nDir = -1;
     if (STATUS(nRes, ORG))  // 利用硬限(原点传感器)位停止
     {
+        qDebug() << "nPos = " << nPos << Qt::endl;
         ImmediateStop();
         // d1000_set_command_pos(m_nId, 0);
     }
@@ -123,6 +132,7 @@ void Axis::KeyboardLeft()
     }
 }
 
+/*
 void Axis::KeyboardRight()
 {
     if (m_nId == -1)
@@ -130,6 +140,8 @@ void Axis::KeyboardRight()
 
     m_bHome = false;
     long nPos = d1000_get_command_pos(m_nId);
+
+
     m_nDir = 1;
     if (nPos <= _HIGH)    // 软限位
     {
@@ -139,17 +151,39 @@ void Axis::KeyboardRight()
     {
         d1000_immediate_stop(m_nId);
     }
+} */
+
+
+void Axis::KeyboardRight(int nUp)
+{
+    if (m_nId == -1)
+        return;
+
+    m_bHome = false;
+    long nPos = d1000_get_command_pos(m_nId);
+
+    m_nDir = 1;
+    if (nPos <= nUp)    // 软限位
+    {
+        d1000_start_sv_move(m_nId, 100, 1000, 0.1);
+    }
+    else
+    {
+        d1000_immediate_stop(m_nId);
+    }
 }
 
-void Axis::HomeMove(double dMaxSpeed)
+void Axis::HomeMove(short nDir, double dMaxSpeed)
 {
     if (d1000_check_done(m_nId) == 0)
         return;
 
-    if (dMaxSpeed > 0.0)
-        dMaxSpeed = -dMaxSpeed;
+    long nSpeed = CONVERT_TO_PLUSE(dMaxSpeed);
+    if (nSpeed > 0)
+        nSpeed = -nSpeed;
 
-    long nMaxVel = CONVERT_TO_PLUSE(dMaxSpeed);
+    // m_nDir = nDir;
+    long nMaxVel = nSpeed;
     long nMinVel = nMaxVel / 10;
 
     m_bHome = true;

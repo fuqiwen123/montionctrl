@@ -20,9 +20,27 @@ enum Status
     RESERVE = 7
 };
 
+enum Type
+{
+    HOME = 0,
+    CONTINOUS = 1,
+    REL_POS = 2,
+    ABS_POS = 3,
+
+};
+
+
 #define STATUS(status, bit) (((status) & (1 << bit)) >> (bit))
 #define _LOW 0
 #define _HIGH 20000
+
+#define X_LOW 0
+#define Y_LOW 0
+#define Z_LOW 0
+
+#define X_UP 20000
+#define Y_UP 10000
+#define Z_UP 10000
 
 
 class Axis
@@ -42,8 +60,8 @@ public:
     double GetPostion();
 
     void KeyboardLeft();
-    void KeyboardRight();
-    void HomeMove(double dMaxSpeed);
+    void KeyboardRight(int nUp);
+    void HomeMove(short nDir, double dMaxSpeed);
 
 private:
     short m_nDir = 0;      // 运动时轴移动的方向(-1, 1, 单位矢量)
